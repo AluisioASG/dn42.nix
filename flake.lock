@@ -1,0 +1,60 @@
+{
+  "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1604964167,
+        "narHash": "sha256-+mTmiCD29wecyDaGlbeWpvnysBygagl9FdMVfdU0RTM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "af81e8d00b2cd021d8806104f14d66ae429dc2f7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1604987532,
+        "narHash": "sha256-O3afggEbKLxnHbNmZq6Mno8dbtNrPk5D2RN3x5HoH5U=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "dd1b7e377f6d77ddee4ab84be11173d3566d6a18",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs",
+        "src": "src"
+      }
+    },
+    "src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1582655342,
+        "narHash": "sha256-+OoJ5BOYVZWvs0EF+N5/AGkpkEOeOvS/rCuL4t8Bo5I=",
+        "ref": "master",
+        "rev": "4a185c375c404360b4f2fa3f5791d0b8876c83ca",
+        "revCount": 49,
+        "type": "git",
+        "url": "ssh://git@git.dn42.dev/dn42/pingfinder.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@git.dn42.dev/dn42/pingfinder.git"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
