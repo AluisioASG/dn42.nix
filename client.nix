@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2020 Aluísio Augusto Silva Gonçalves <https://aasg.name>
+# SPDX-License-Identifier: MIT
+
 { stdenv
 , makeWrapper
 , curl
