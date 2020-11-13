@@ -3,9 +3,11 @@
 
 { stdenv
 , makeWrapper
+, coreutils
 , curl
 , gnugrep
 , iputils
+, which
 , src ? fetchGit "git@git.dn42.dev:dn42/pingfinder.git"
 }:
 
@@ -25,7 +27,13 @@ stdenv.mkDerivation {
     runHook preInstall
     mkdir -p "$out/bin"
     mv clients/generic-linux-debian-redhat-busybox.sh "$out/bin/peerfinder"
-    wrapProgram "$out/bin/peerfinder" --set PATH "${stdenv.lib.makeBinPath [ curl gnugrep iputils ]}"
+    wrapProgram "$out/bin/peerfinder" --set PATH "${stdenv.lib.makeBinPath [
+      coreutils
+      curl
+      gnugrep
+      iputils
+      which
+    ]}"
     runHook postInstall
   '';
 
