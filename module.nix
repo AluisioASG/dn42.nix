@@ -26,8 +26,9 @@ in
         type = types.path;
       };
 
-      numPings = mkOption {
+      pingsPerRequest = mkOption {
         description = "Number of pings to send for each request.";
+        default = 5;
         type = types.ints.positive;
       };
     };
@@ -39,7 +40,7 @@ in
       after = [ "network-online.target" ];
       environment = {
         PEERFINDER = cfg.client.serviceUrl;
-        NB_PINGS = toString cfg.client.numPings;
+        NB_PINGS = toString cfg.client.pingsPerRequest;
       };
       serviceConfig = {
         Type = "simple";
