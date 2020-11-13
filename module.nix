@@ -2,21 +2,21 @@
 let
   inherit (lib) mkEnableOption mkIf mkOption types;
 
-  cfg = config.services.dn42-pingfinder.client;
+  cfg = config.services.dn42-peerfinder;
 in
 {
   options = {
-    services.dn42-pingfinder.client = {
-      enable = mkEnableOption "dn42-pingfinder client script";
+    services.dn42-peerfinder.client = {
+      enable = mkEnableOption "dn42 peer finder client script";
 
       serviceUrl = mkOption {
-        description = "URL of the peerfinder service to connect to.";
+        description = "URL of the peer finder service to connect to.";
         default = "https://dn42.us/peer";
         type = types.str;
       };
 
       uuid = mkOption {
-        description = "Identifier of the machine in the peerfinder service.";
+        description = "Identifier of the machine in the peer finder service.";
         type = types.strMatching " [[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}";
       };
 
@@ -27,18 +27,18 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    systemd.services.dn42-pingfinder-client = {
-      description = "dn42 PingFinder client";
+  config = {
+    systemd.services.dn42-peerfinder-client = mkIf cfg.client.enable {
+      description = "dn42 peer finder client";
       after = [ "network-online.target" ];
       environment = {
-        PEERFINDER = cfg.serviceUrl;
-        UUID = cfg.uuid;
-        NB_PINGS = toString cfg.numPings;
+        PEERFINDER = cfg.client.serviceUrl;
+        UUID = cfg.client.uuid;
+        NB_PINGS = toString cfg.client.numPings;
       };
       serviceConfig = {
         Type = "simple";
-        ExecStart = ''${pkgs.dn42-pingfinder-client}/bin/pingfinder'';
+        ExecStart = ''${pkgs.dn42-peerfinder.client}/bin/peerfinder'';
         DynamicUser = true;
         NoNewPrivileges = true;
         ProtectSystem = "strict";

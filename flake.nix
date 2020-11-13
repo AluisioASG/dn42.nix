@@ -13,9 +13,9 @@
       };
       outputs = flake-utils.lib.simpleFlake {
         inherit self nixpkgs;
-        name = "dn42-pingfinder";
+        name = "dn42-peerfinder";
         overlay = final: prev: {
-          dn42-pingfinder.defaultPackage = final.callPackage ./derivation.nix {
+          dn42-peerfinder.client = final.callPackage ./client.nix {
             inherit src;
           };
         };

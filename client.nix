@@ -7,7 +7,7 @@
 }:
 
 stdenv.mkDerivation {
-  name = "dn42-pingfinder-client";
+  name = "dn42-peerfinder-client";
 
   inherit src;
 
@@ -21,8 +21,8 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     mkdir -p "$out/bin"
-    mv clients/generic-linux-debian-redhat-busybox.sh "$out/bin/pingfinder"
-    wrapProgram "$out/bin/pingfinder" --set PATH "${stdenv.lib.makeBinPath [ curl gnugrep iputils ]}"
+    mv clients/generic-linux-debian-redhat-busybox.sh "$out/bin/peerfinder"
+    wrapProgram "$out/bin/peerfinder" --set PATH "${stdenv.lib.makeBinPath [ curl gnugrep iputils ]}"
     runHook postInstall
   '';
 
