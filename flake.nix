@@ -6,17 +6,14 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    src = { url = "git+ssh://git@git.dn42.dev/dn42/pingfinder.git"; flake = false; };
   };
 
-  outputs = { self, flake-utils, nixpkgs, src }:
+  outputs = { self, flake-utils, nixpkgs }:
     let
       exports = {
         nixosModule = import ./module.nix;
         overlay = final: prev: {
-          dn42-peerfinder.client = final.callPackage ./client.nix {
-            inherit src;
-          };
+          dn42-peerfinder.client = final.callPackage ./client.nix { };
         };
       };
       outputs = flake-utils.lib.simpleFlake {

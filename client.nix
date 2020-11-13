@@ -8,25 +8,20 @@
 , gnugrep
 , iputils
 , which
-, src ? fetchGit "git@git.dn42.dev:dn42/pingfinder.git"
 }:
 
-stdenv.mkDerivation {
+stdenv.mkDerivation rec {
   name = "dn42-peerfinder-client";
 
-  inherit src;
+  src = ./client.sh;
+  dontUnpack = true;
 
   nativeBuildInputs = [ makeWrapper ];
-
-  postPatch = ''
-    substituteInPlace clients/generic-linux-debian-redhat-busybox.sh \
-      --replace '"$NB_PINGS"' '-c "$NB_PINGS"'
-  '';
 
   installPhase = ''
     runHook preInstall
     mkdir -p "$out/bin"
-    mv clients/generic-linux-debian-redhat-busybox.sh "$out/bin/peerfinder"
+    mv "${src}" "$out/bin/peerfinder"
     wrapProgram "$out/bin/peerfinder" --set PATH "${stdenv.lib.makeBinPath [
       coreutils
       curl

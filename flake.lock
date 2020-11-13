@@ -34,24 +34,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs",
-        "src": "src"
-      }
-    },
-    "src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1582655342,
-        "narHash": "sha256-+OoJ5BOYVZWvs0EF+N5/AGkpkEOeOvS/rCuL4t8Bo5I=",
-        "ref": "master",
-        "rev": "4a185c375c404360b4f2fa3f5791d0b8876c83ca",
-        "revCount": 49,
-        "type": "git",
-        "url": "ssh://git@git.dn42.dev/dn42/pingfinder.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@git.dn42.dev/dn42/pingfinder.git"
+        "nixpkgs": "nixpkgs"
       }
     }
   },
