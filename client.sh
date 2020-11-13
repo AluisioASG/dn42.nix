@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # Copyright (c) 2018, sour.is
+# Copyright (c) 2020, Aluísio Augusto Silva Gonçalves
 # SPDX-License-Identifier: LicenseRef-Souris
 #
 # Measurement script for the dn42 peer finder, see http://dn42.us/peers
@@ -11,17 +12,7 @@
 #   UUID=<Your UUID goes here>
 #   */5 * * * * /home/foo/cron.sh
 #
-
-# Put your UUID here, and keep it secret!
-UUID=${UUID}
-PEERFINDER=${PEERFINDER:-"https://dn42.us/peers"}
-NB_PINGS=${NB_PINGS:-5}
-LOGFILE=${LOGFILE:-/dev/stdout}   # Set to /dev/null to only receive errors.
-                                  # Set to a file writable by the cron runner to record pings.
-                                  #  (Errors will be sent in cron mail)
-WARNLOCK=${WARNLOCK:-warn.lock}   # Set this variable if you want a file written when the script updates.
-LOCKFILE=${LOCKFILE:-exec.lock}   # Set this variable if you want the script to not run multiple instances at once.
-LOCKFD=${LOCKFD:-42}
+set -u
 
 # This avoids synchronisation (everybody fetching jobs and running
 # measurements simultaneously)
@@ -33,16 +24,8 @@ function die() {
   exit 1
 }
 
-if command -v flock >/dev/null 2>&1; then
-  eval "exec $LOCKFD>$LOCKFILE"
-  flock -n $LOCKFD || die "Unable to acquire lock."
-fi
-
 VERSION=1.0.10
 ver() { printf "%03d%03d%03d%03d" $(echo "$1" | tr '.' ' '); }
-
-[ -e $LOGFILE ] || touch $LOGFILE
-exec >> $LOGFILE
 
 echo "STARTING PEERFINDER (v. $VERSION)"
 
@@ -99,10 +82,6 @@ while true ; do
     echo "## PEERFINDER WARN $(date) ## " \
          "Current script version is $CUR_VERSION. You are running $VERSION " \
          "Get it here: https://dn42.us/peers/script"
-
-    [ -z "$WARNLOCK" ] && touch $WARNLOCK
-  else
-    [ -z "$WARNLOCK" -o -f "$WARNLOCK" ] && rm $WARNLOCK
   fi
 
   # Avoid empty fields
