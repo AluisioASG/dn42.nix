@@ -18,9 +18,12 @@ in
         type = types.str;
       };
 
-      uuid = mkOption {
-        description = "Identifier of the machine in the peer finder service.";
-        type = types.strMatching " [[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}";
+      uuidFile = mkOption {
+        description = ''
+          File containing the identifier of the machine in the peer finder service.
+          The file must be formatted as an assignment to the environment variable `UUID`.
+        '';
+        type = types.path;
       };
 
       numPings = mkOption {
@@ -36,12 +39,12 @@ in
       after = [ "network-online.target" ];
       environment = {
         PEERFINDER = cfg.client.serviceUrl;
-        UUID = cfg.client.uuid;
         NB_PINGS = toString cfg.client.numPings;
       };
       serviceConfig = {
         Type = "simple";
         ExecStart = ''${pkgs.dn42-peerfinder.client}/bin/peerfinder'';
+        EnvironmentFile = cfg.client.uuidFile;
         DynamicUser = true;
         NoNewPrivileges = true;
         ProtectSystem = "strict";
