@@ -50,5 +50,15 @@ in
         PrivateTmp = true;
       };
     };
+
+    systemd.timers.dn42-peerfinder-client = mkIf cfg.client.enable {
+      wantedBy = [ "timers.target" ];
+      after = [ "network-online.target" ];
+      description = "dn42 peer finder processing timer";
+      timerConfig = {
+        OnBootSec = "5min";
+        OnUnitActiveSec = "5min";
+      };
+    };
   };
 }
