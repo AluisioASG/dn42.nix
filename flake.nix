@@ -13,15 +13,16 @@
     let
       exports = {
         nixosModule = import ./module.nix;
-      };
-      outputs = flake-utils.lib.simpleFlake {
-        inherit self nixpkgs;
-        name = "dn42-peerfinder";
         overlay = final: prev: {
           dn42-peerfinder.client = final.callPackage ./client.nix {
             inherit src;
           };
         };
+      };
+      outputs = flake-utils.lib.simpleFlake {
+        inherit self nixpkgs;
+        inherit (exports) overlay;
+        name = "dn42-peerfinder";
       };
     in
     exports // outputs;
