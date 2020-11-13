@@ -3,13 +3,17 @@
 
 { stdenv
 , makeWrapper
+, writeScriptBin
 , coreutils
 , curl
 , gnugrep
 , iputils
 , which
 }:
-
+let silentWhich = writeScriptBin "which" ''
+  exec "${which}/bin/which" "$@" 2>/dev/null
+'';
+in
 stdenv.mkDerivation rec {
   name = "dn42-peerfinder-client";
 
@@ -27,7 +31,7 @@ stdenv.mkDerivation rec {
       curl
       gnugrep
       iputils
-      which
+      silentWhich
     ]}"
     runHook postInstall
   '';
