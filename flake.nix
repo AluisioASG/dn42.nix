@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 {
-  description = "Measurement script for the dn42 peer finder";
+  description = "dn42 peer finder";
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
