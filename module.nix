@@ -14,7 +14,7 @@ in
 
       serviceUrl = mkOption {
         description = "URL of the peer finder service to connect to.";
-        default = "https://dn42.us/peer";
+        default = "https://dn42.us/peers";
         type = types.str;
       };
 
