@@ -12,6 +12,7 @@
     let
       exports = {
         nixosModules = {
+          updaters = import ./updaters/nixos.nix;
           bird-lg = import ./bird-lg/nixos.nix;
           peerfinder-client = import ./peerfinder-client/nixos.nix;
         };
