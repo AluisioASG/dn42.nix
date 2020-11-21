@@ -44,7 +44,7 @@ in
       };
       serviceConfig = {
         Type = "simple";
-        ExecStart = ''${pkgs.dn42-peerfinder.client}/bin/peerfinder'';
+        ExecStart = ''${pkgs.dn42.peerfinder-client}/bin/peerfinder'';
         EnvironmentFile = cfg.client.uuidFile;
         DynamicUser = true;
         NoNewPrivileges = true;
