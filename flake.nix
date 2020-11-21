@@ -19,6 +19,10 @@
           bird-lg = import ./bird-lg/nixos.nix;
           peerfinder-client = import ./peerfinder-client/nixos.nix;
         };
+        # Compose all modules into one, for convenience.
+        nixosModule = {
+          imports = builtins.attrValues self.nixosModules;
+        };
         overlay = final: prev: {
           dn42.bird-lg = final.callPackage ./bird-lg { };
           dn42.peerfinder-client = final.callPackage ./peerfinder-client { };
