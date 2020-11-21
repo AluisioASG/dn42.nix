@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2020 Aluísio Augusto Silva Gonçalves <https://aasg.name>
+# SPDX-License-Identifier: MIT
+
 # Put everything inside a function to avoid polluting the script's
 # global namespace.
 def _config_loader_main():

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2020 Aluísio Augusto Silva Gonçalves <https://aasg.name>
+# SPDX-License-Identifier: MIT
+
 { stdenv, fetchFromGitHub, fetchpatch, graphviz, python3, traceroute, whois }:
 let
   runtimeDeps = [
