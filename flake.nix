@@ -13,6 +13,9 @@
       exports = {
         nixosModules = {
           updaters = import ./updaters/nixos.nix;
+          updaters-asn = import ./updaters/asn-dns-zone.nix;
+          updaters-bird = import ./updaters/bird.nix;
+          updaters-unbound = import ./updaters/unbound.nix;
           bird-lg = import ./bird-lg/nixos.nix;
           peerfinder-client = import ./peerfinder-client/nixos.nix;
         };

@@ -3,7 +3,7 @@
 
 { config, lib, pkgs, ... }:
 let
-  inherit (lib) mapAttrs' mkMerge mkOption nameValuePair types;
+  inherit (lib) any filter mapAttrs' mkEnableOption mkMerge mkOption nameValuePair types;
 
   user = "dn42-update";
   spoolDir = "/var/spool/dn42-update";
@@ -74,7 +74,9 @@ let
   };
 
   generateUnits = prefix: generator:
-    mapAttrs' (name: value: nameValuePair "${prefix}-${name}" (generator name value)) config.dn42.updaters;
+    mapAttrs'
+      (name: value: nameValuePair "${prefix}-${name}" (generator name value))
+      (filter (updater: updater.enable) config.dn42.updaters);
 in
 {
 
@@ -83,6 +85,7 @@ in
       description = "dn42 update services.";
       type = types.attrsOf (types.submodule {
         options = {
+          enable = mkEnableOption "${name} dn42 updater";
           source = mkOption {
             description = "URL to download as input for the updater.";
             type = types.str;
@@ -120,7 +123,7 @@ in
     };
   };
 
-  config = mkIf (config.dn42.updaters != [ ]) {
+  config = mkIf (any (updater: updater.enable) config.dn42.updaters) {
     systemd.services = mkMerge [
       (generateUnits "dn42-updater" generateUpdateService)
       (generateUnits "dn42-updater-restart" generateRestartService)
