@@ -12,9 +12,11 @@
     let
       exports = {
         nixosModules = {
+          bird-lg = import ./bird-lg/nixos.nix;
           peerfinder-client = import ./peerfinder-client/nixos.nix;
         };
         overlay = final: prev: {
+          dn42.bird-lg = final.callPackage ./bird-lg { };
           dn42.peerfinder-client = final.callPackage ./peerfinder-client { };
         };
       };
