@@ -99,7 +99,7 @@ in
       UNIFIED_DAEMON = mkDefault true;
     };
 
-    services.bird-lg.server.mkGunicornSettings = gunicornDefaults cfg.server;
+    services.bird-lg.server.gunicornSettings = gunicornDefaults cfg.server;
 
     systemd.services.bird-lg-server = sharedService {
       description = "BIRD looking glass web server";

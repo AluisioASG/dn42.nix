@@ -5,7 +5,7 @@
 {
   # Template updater for the dn42 ASN records.
   #
-  # Be sure to set the destination file and restart scripts, and to set
+  # Be sure to set the destination file and reload scripts, and to set
   # an `$ORIGIN` and SOA and NS records using `mkBefore` in the process
   # script.
   dn42.updaters.asn = {

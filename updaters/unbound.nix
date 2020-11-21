@@ -11,7 +11,7 @@
     process = ''
       jq --raw-output '."domain/delegation-servers.dn42".nserver | .[] | split(" ") | "stub-addr: \(.[1])@53#\(.[0])"'
     '';
-    reload = "/run/current-system/systemd/bin/systemctl reload unbound.service";
+    services = [ "unbound.service" ];
     interval = "1day";
   };
 
@@ -22,7 +22,7 @@
     process = ''
       jq --raw-output '."domain/dn42"."ds-rdata" | .[] | "dn42. IN DS \(.)"'
     '';
-    reload = "/run/current-system/systemd/bin/systemctl reload unbound.service";
+    services = [ "unbound.service" ];
     interval = "1day";
   };
 }

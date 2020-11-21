@@ -3,7 +3,8 @@
 
 { config, lib, pkgs, ... }:
 let
-  inherit (lib) any filter mapAttrs' mkEnableOption mkMerge mkOption nameValuePair types;
+  inherit (builtins) any attrValues concatStringsSep getAttr;
+  inherit (lib) filterAttrs mapAttrs' mkIf mkMerge mkOption nameValuePair types;
 
   user = "dn42-update";
   spoolDir = "/var/spool/dn42-update";
@@ -39,6 +40,7 @@ let
       PrivateTmp = true;
       DevicePolicy = "closed";
       MemoryDenyWriteExecute = true;
+      ReadWritePaths = [ spoolDir ];
     };
   };
 
@@ -55,28 +57,30 @@ let
 
   generatePathWatcher = name: cfg: {
     wantedBy = [ "multi-user.target" ];
-    description = "${name} restart notifier";
+    description = "${name} reload notifier";
     pathConfig = {
       PathExists = "${spoolDir}/${name}";
     };
   };
 
-  generateRestartService = name: cfg: {
-    description = "${name} dn42 restart";
+  generateReloadService = name: cfg: {
+    description = "${name} reloader";
     script = ''
       mv "${spoolDir}/${name}" "${cfg.destination}"
-      ${cfg.restart}
+      ${if cfg.reload == null then ""
+        else if cfg.reload != "" then cfg.reload
+        else "/run/current-system/systemd/bin/systemctl try-reload-or-restart ${concatStringsSep " " cfg.services}"}
     '';
     serviceConfig = {
       Type = "oneshot";
-      ReadWritePaths = dirOf cfg.destination;
+      ReadWritePaths = [ spoolDir (dirOf cfg.destination) ];
     };
   };
 
   generateUnits = prefix: generator:
     mapAttrs'
       (name: value: nameValuePair "${prefix}-${name}" (generator name value))
-      (filter (updater: updater.enable) config.dn42.updaters);
+      (filterAttrs (_: getAttr "enable") config.dn42.updaters);
 in
 {
 
@@ -85,7 +89,11 @@ in
       description = "dn42 update services.";
       type = types.attrsOf (types.submodule {
         options = {
-          enable = mkEnableOption "${name} dn42 updater";
+          enable = mkOption {
+            description = "Whether to enable this dn42 updater.";
+            type = types.bool;
+            default = false;
+          };
           source = mkOption {
             description = "URL to download as input for the updater.";
             type = types.str;
@@ -104,10 +112,20 @@ in
             type = types.listOf types.package;
             default = [ ];
           };
-          restart = mkOption {
-            description = "Commands used to reload or restart the dependent services, run as root.";
-            type = types.lines;
+          services = mkOption {
+            description = "Services affected by this update.";
+            type = types.listOf types.str;
+            default = [ ];
+          };
+          reload = mkOption {
+            description = ''
+              Commands used to reload or restart the dependent services, run as root.
+              Defaults to reloading the affected services.
+              Set to null to explicity do nothing.
+            '';
+            type = types.nullOr types.lines;
             default = "";
+            defaultText = "/run/current-system/systemd/bin/systemctl try-reload-or-restart \${cfg.services}";
           };
           group = mkOption {
             description = "Group to run the updater as, and which will own the updated file.";
@@ -123,13 +141,13 @@ in
     };
   };
 
-  config = mkIf (any (updater: updater.enable) config.dn42.updaters) {
+  config = mkIf (any (getAttr "enable") (attrValues config.dn42.updaters)) {
     systemd.services = mkMerge [
       (generateUnits "dn42-updater" generateUpdateService)
-      (generateUnits "dn42-updater-restart" generateRestartService)
+      (generateUnits "dn42-updater-reload" generateReloadService)
     ];
     systemd.timers = generateUnits "dn42-updater" generateTimer;
-    systemd.paths = generateUnits "dn42-updater-restart" generatePathWatcher;
+    systemd.paths = generateUnits "dn42-updater-reload" generatePathWatcher;
 
     # Create the service user.
     users.users.${user} = {
