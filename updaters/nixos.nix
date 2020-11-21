@@ -67,9 +67,7 @@ let
     description = "${name} reloader";
     script = ''
       mv "${spoolDir}/${name}" "${cfg.destination}"
-      ${if cfg.reload == null then ""
-        else if cfg.reload != "" then cfg.reload
-        else "/run/current-system/systemd/bin/systemctl try-reload-or-restart ${concatStringsSep " " cfg.services}"}
+      ${cfg.reload}
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -87,7 +85,7 @@ in
   options = {
     dn42.updaters = mkOption {
       description = "dn42 update services.";
-      type = types.attrsOf (types.submodule {
+      type = types.attrsOf (types.submodule ({ config, ... }: {
         options = {
           enable = mkOption {
             description = "Whether to enable this dn42 updater.";
@@ -118,14 +116,10 @@ in
             default = [ ];
           };
           reload = mkOption {
-            description = ''
-              Commands used to reload or restart the dependent services, run as root.
-              Defaults to reloading the affected services.
-              Set to null to explicity do nothing.
-            '';
-            type = types.nullOr types.lines;
-            default = "";
-            defaultText = "/run/current-system/systemd/bin/systemctl try-reload-or-restart \${cfg.services}";
+            description = "Commands used to reload or restart the dependent services, run as root.";
+            type = types.lines;
+            default = "/run/current-system/systemd/bin/systemctl try-reload-or-restart ${concatStringsSep " " config.services}";
+            defaultText = "/run/current-system/systemd/bin/systemctl try-reload-or-restart \${services}";
           };
           group = mkOption {
             description = "Group to run the updater as, and which will own the updated file.";
@@ -136,7 +130,7 @@ in
             type = types.str;
           };
         };
-      });
+      }));
       default = { };
     };
   };
