@@ -24,7 +24,7 @@ let
   frontend = callPackage ./frontend.nix { inherit src version meta; };
   proxy = callPackage ./proxy.nix { inherit src version meta; };
 in
-runCommand "${pname}-${version}" { inherit pname version meta; } ''
-  install -D ${frontend}/bin/frontend $out/bin/bird-lg-go
-  install -D ${proxy}/bin/proxy $out/bin/bird-lg-go-proxy
+runCommand "${pname}-${version}" { inherit pname version meta frontend proxy; } ''
+  install -D $frontend/bin/frontend $out/bin/bird-lg-go
+  install -D $proxy/bin/proxy $out/bin/bird-lg-go-proxy
 ''

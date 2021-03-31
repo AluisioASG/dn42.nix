@@ -15,6 +15,12 @@ in
     services.bird-lg-go.server = {
       enable = mkEnableOption "BIRD looking glass frontend";
 
+      package = mkOption {
+        description = "bird-lg-go package.";
+        default = pkgs.dn42.bird-lg-go;
+        type = types.package;
+      };
+
       targets = mkOption {
         description = "Hostnames of BIRD servers to query.";
         type = types.listOf types.str;
@@ -65,6 +71,12 @@ in
     services.bird-lg-go.proxy = {
       enable = mkEnableOption "BIRD looking glass proxy";
 
+      package = mkOption {
+        description = "bird-lg-go package.";
+        default = pkgs.dn42.bird-lg-go;
+        type = types.package;
+      };
+
       serverIPs = mkOption {
         description = "IP addresses allowed to access the proxy.";
         type = types.nullOr (types.listOf types.str);
@@ -107,7 +119,7 @@ in
 
         serviceConfig = {
           Type = "simple";
-          ExecStart = "${pkgs.dn42.bird-lg-go}/bin/bird-lg-go";
+          ExecStart = "${serverCfg.package}/bin/bird-lg-go";
           Restart = "on-failure";
 
           DynamicUser = true;
@@ -141,7 +153,7 @@ in
 
         serviceConfig = {
           Type = "simple";
-          ExecStart = "${pkgs.dn42.bird-lg-go}/bin/bird-lg-go-proxy";
+          ExecStart = "${proxyCfg.package}/bin/bird-lg-go-proxy";
           Restart = "on-failure";
 
           DynamicUser = true;
