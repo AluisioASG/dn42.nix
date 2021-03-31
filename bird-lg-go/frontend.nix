@@ -1,9 +1,8 @@
 # SPDX-FileCopyrightText: 2021 Aluísio Augusto Silva Gonçalves <https://aasg.name>
 # SPDX-License-Identifier: MIT
 
-{ stdenv, pkgs, buildGoModule, callPackage, go-bindata, nodejs }:
+{ stdenv, pkgs, buildGoModule, go-bindata, nodejs, meta, src, version }:
 let
-  common = callPackage ./common.nix { };
   nodePackages = import ./node-composition.nix {
     inherit pkgs nodejs;
     inherit (stdenv.hostPlatform) system;
@@ -18,7 +17,7 @@ let
 in
 buildGoModule {
   pname = "bird-lg-go";
-  inherit (common) version src;
+  inherit version src;
   sourceRoot = "source/frontend";
   patches = [
     ./skip_network_tests.patch
@@ -38,5 +37,5 @@ buildGoModule {
     go generate
   '';
 
-  meta = common.meta // { description = "${common.meta.description} (frontend)"; };
+  meta = meta // { description = "${meta.description} (frontend)"; };
 }
