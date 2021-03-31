@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2021 Aluísio Augusto Silva Gonçalves <https://aasg.name>
+# SPDX-License-Identifier: CC0-1.0
+diff --git i/bgpmap_test.go w/bgpmap_test.go
+index bf638ec..d7ac42a 100644
+--- i/bgpmap_test.go
++++ w/bgpmap_test.go
+@@ -6,6 +6,7 @@ import (
+ )
+
+ func TestGetASNRepresentation(t *testing.T) {
++	t.Skip("Nix sandbox does not have networking")
+ 	setting.dnsInterface = "asn.cymru.com"
+ 	result := getASNRepresentation("6939")
+ 	if !strings.Contains(result, "HURRICANE") {

@@ -25,6 +25,8 @@
         };
         overlay = final: prev: {
           dn42.bird-lg = final.callPackage ./bird-lg { };
+          dn42.bird-lg-go = final.callPackage ./bird-lg-go/frontend.nix { };
+          dn42.bird-lg-go-proxy = final.callPackage ./bird-lg-go/proxy.nix { };
           dn42.peerfinder-client = final.callPackage ./peerfinder-client { };
         };
       };
