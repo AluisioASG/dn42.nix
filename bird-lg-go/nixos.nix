@@ -3,7 +3,7 @@
 
 { config, lib, pkgs, ... }:
 let
-  inherit (lib) concatStringsSep mkEnableOption mkIf mkMerge mkOption types;
+  inherit (lib) concatStringsSep mkEnableOption mkIf mkMerge mkOption optionalString types;
 
   serverCfg = config.services.bird-lg-go.server;
   proxyCfg = config.services.bird-lg-go.proxy;
@@ -139,6 +139,13 @@ in
     })
 
     (mkIf proxyCfg.enable {
+      assertions = [
+        {
+          assertion = proxyCfg.serverIPs != [ ];
+          message = "setting config.services.bird-lg-go.proxy.serverIPs to an empty list allows access by all addresses; set it to null if that is intended";
+        }
+      ];
+
       systemd.services.bird-lg-go-proxy = {
         description = "BIRD looking glass proxy";
         requires = [ "network.target" ];
@@ -146,7 +153,7 @@ in
         wantedBy = [ "multi-user.target" ];
 
         environment = {
-          ALLOWED_IPS = concatStringsSep "," proxyCfg.serverIPs;
+          ALLOWED_IPS = optionalString (proxyCfg.serverIPs != null) (concatStringsSep "," proxyCfg.serverIPs);
           BIRD_SOCKET = proxyCfg.birdSocket;
           BIRDLG_LISTEN = proxyCfg.listenAddress;
         };
