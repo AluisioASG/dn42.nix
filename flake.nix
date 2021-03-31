@@ -17,6 +17,7 @@
           updaters-bird = import ./updaters/bird.nix;
           updaters-unbound = import ./updaters/unbound.nix;
           bird-lg = import ./bird-lg/nixos.nix;
+          bird-lg-go = import ./bird-lg-go/nixos.nix;
           peerfinder-client = import ./peerfinder-client/nixos.nix;
         };
         # Compose all modules into one, for convenience.
