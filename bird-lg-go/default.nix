@@ -4,13 +4,13 @@
 { lib, callPackage, fetchFromGitHub, runCommand }:
 let
   pname = "bird-lg-go";
-  version = "2021-03-31-unstable";
+  version = "2021-04-09-unstable";
 
   src = fetchFromGitHub {
     owner = "xddxdd";
     repo = "bird-lg-go";
-    rev = "5b5a09ccbddc2b35e080a9df0237ce6cc97a25a3";
-    hash = "sha256-5lfOmbS3A+EwAINGQwqTLvhnh+kcpN5qKTQj4yCyNsM=";
+    rev = "6e19b5ae6449cd636f739e287dadfbf194aa2933";
+    hash = "sha256-/gYQ4vc3muIIlVFuCtYLvigDQ9GvrFO6ibgOrYd4QT8=";
   };
 
   meta = with lib; {
