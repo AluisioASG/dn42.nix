@@ -56,7 +56,7 @@ let
       BIRD_LG_SYSLOG = toString subcfg.logToSyslog;
     };
     serviceConfig = {
-      Type = "simple";
+      Type = "exec";
       ExecStart = "${pkgs.dn42.bird-lg}/bin/${script} --config=\${BIRD_LG_CONFIG}";
       Restart = "on-failure";
 

@@ -43,7 +43,7 @@ in
         NB_PINGS = toString cfg.client.pingsPerRequest;
       };
       serviceConfig = {
-        Type = "simple";
+        Type = "exec";
         ExecStart = ''${pkgs.dn42.peerfinder-client}/bin/peerfinder'';
         EnvironmentFile = cfg.client.uuidFile;
         DynamicUser = true;

@@ -118,7 +118,7 @@ in
         };
 
         serviceConfig = {
-          Type = "simple";
+          Type = "exec";
           ExecStart = "${serverCfg.package}/bin/bird-lg-go";
           Restart = "on-failure";
 
@@ -159,7 +159,7 @@ in
         };
 
         serviceConfig = {
-          Type = "simple";
+          Type = "exec";
           ExecStart = "${proxyCfg.package}/bin/bird-lg-go-proxy";
           Restart = "on-failure";
 
