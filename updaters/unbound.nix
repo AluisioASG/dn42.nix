@@ -25,4 +25,15 @@
     services = [ "unbound.service" ];
     interval = "1day";
   };
+
+  dn42.updaters.unbound-dnssec-neonetwork = {
+    source = "https://explorer.burble.com/api/registry/domain/neo/ds-rdata";
+    destination = "/var/lib/unbound/neonetwork.key";
+    processPackages = [ pkgs.jq ];
+    process = ''
+      jq --raw-output '."domain/neo"."ds-rdata" | .[] | "dn42. IN DS \(.)"'
+    '';
+    services = [ "unbound.service" ];
+    interval = "1day";
+  };
 }
