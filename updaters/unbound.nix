@@ -26,6 +26,7 @@ in
   dn42.updaters.unbound-roots = {
     source = "https://explorer.burble.com/api/registry/domain/delegation-servers.dn42/nserver";
     destination = "/var/lib/unbound/dn42_stub_addrs.conf";
+    defaultContents = "";
     processPackages = [ pkgs.jq ];
     process = ''
       jq --raw-output '."domain/delegation-servers.dn42".nserver | .[] | split(" ") | "stub-addr: \(.[1])@53#\(.[0])"'
@@ -37,6 +38,7 @@ in
   dn42.updaters.unbound-dnssec = {
     source = "https://explorer.burble.com/api/registry/domain/dn42/ds-rdata";
     destination = "/var/lib/unbound/dn42.key";
+    defaultContents = "";
     processPackages = [ pkgs.jq ];
     process = ''
       jq --raw-output --argjson zones ${argJSON dn42_zones} '."domain/dn42"."ds-rdata" | .[] as $rdata | $zones[] as $zone | "\($zone) IN DS \($rdata)"'
@@ -48,6 +50,7 @@ in
   dn42.updaters.unbound-dnssec-neonetwork = {
     source = "https://explorer.burble.com/api/registry/domain/neo/ds-rdata";
     destination = "/var/lib/unbound/neonetwork.key";
+    defaultContents = "";
     processPackages = [ pkgs.jq ];
     process = ''
       jq --raw-output --argjson zones ${argJSON neonetwork_zones} '."domain/neo"."ds-rdata" | .[] as $rdata | $zones[] as $zone | "\($zone) IN DS \($rdata)"'

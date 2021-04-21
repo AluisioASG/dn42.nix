@@ -4,7 +4,7 @@
 { config, lib, pkgs, ... }:
 let
   inherit (builtins) any attrValues concatStringsSep getAttr;
-  inherit (lib) filterAttrs mapAttrs' mkIf mkMerge mkOption nameValuePair types;
+  inherit (lib) filterAttrs mapAttrsToList mapAttrs' mkIf mkMerge mkOption nameValuePair pipe types;
 
   user = "dn42-update";
   spoolDir = "/var/spool/dn42-update";
@@ -100,6 +100,14 @@ in
             description = "File which is updated by the service.";
             type = types.path;
           };
+          defaultContents = mkOption {
+            description = ''
+              If non-null, will create the destination file through systemd-tmpfiles if it does not exist and write to it the given string.
+              This option is useful to ensure that the destination file is valid during an initial configuration switch.
+            '';
+            type = types.nullOr types.str;
+            default = null;
+          };
           process = mkOption {
             description = "Shell script code to execute to transform the source data.";
             type = types.lines;
@@ -150,10 +158,13 @@ in
     };
     users.groups.${user} = { };
 
-    # Create the spool directory
-    systemd.tmpfiles.rules = [
-      "d ${spoolDir} 0700 ${user} ${user} -"
-    ];
+    # Create the spool directory, along with any initial files.
+    systemd.tmpfiles.rules =
+      [ "d ${spoolDir} 0700 ${user} ${user} -" ]
+      ++ pipe config.dn42.updaters [
+        (filterAttrs (name: cfg: cfg.enable && cfg.defaultContents != null))
+        (mapAttrsToList (name: cfg: "f ${cfg.destination} 0444 ${user} ${user} - ${cfg.defaultContents}"))
+      ];
   };
 
 }
