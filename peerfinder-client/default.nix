@@ -25,8 +25,7 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     runHook preInstall
-    mkdir -p "$out/bin"
-    mv "${src}" "$out/bin/peerfinder"
+    install -D "${src}" "$out/bin/peerfinder"
     wrapProgram "$out/bin/peerfinder" --set PATH "${lib.makeBinPath [
       coreutils
       curl
