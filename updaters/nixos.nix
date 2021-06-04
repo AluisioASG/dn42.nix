@@ -155,6 +155,7 @@ in
     users.users.${user} = {
       description = "dn42 update runner";
       group = user;
+      isSystemUser = true;
     };
     users.groups.${user} = { };
 
