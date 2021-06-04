@@ -1,7 +1,8 @@
 # SPDX-FileCopyrightText: 2020 Aluísio Augusto Silva Gonçalves <https://aasg.name>
 # SPDX-License-Identifier: MIT
 
-{ stdenv
+{ lib
+, stdenv
 , makeWrapper
 , writeScriptBin
 , coreutils
@@ -26,7 +27,7 @@ stdenv.mkDerivation rec {
     runHook preInstall
     mkdir -p "$out/bin"
     mv "${src}" "$out/bin/peerfinder"
-    wrapProgram "$out/bin/peerfinder" --set PATH "${stdenv.lib.makeBinPath [
+    wrapProgram "$out/bin/peerfinder" --set PATH "${lib.makeBinPath [
       coreutils
       curl
       gnugrep
@@ -36,7 +37,7 @@ stdenv.mkDerivation rec {
     runHook postInstall
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Measurement script for the dn42 peer finder";
     homepage = "https://dn42.us/peers";
     license = licenses.bsd2;

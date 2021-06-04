@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2020 Aluísio Augusto Silva Gonçalves <https://aasg.name>
 # SPDX-License-Identifier: MIT
 
-{ stdenv, fetchFromGitHub, fetchpatch, graphviz, python3, traceroute, whois }:
+{ lib, stdenv, fetchFromGitHub, fetchpatch, graphviz, python3, traceroute, whois }:
 let
   runtimeDeps = [
     (python3.withPackages (ps: with ps; [
@@ -45,7 +45,7 @@ stdenv.mkDerivation rec {
     sed -i '/app\.config\.from_pyfile/c app.config.from_envvar("BIRD_LG_CONFIG")' lg.py lgproxy.py
   '';
 
-  WRAPPER_PATH = stdenv.lib.makeBinPath runtimeDeps;
+  WRAPPER_PATH = lib.makeBinPath runtimeDeps;
   WRAPPER_PYTHONPATH = placeholder "out";
   installPhase = ''
     function wrapWSGI {
@@ -67,7 +67,7 @@ stdenv.mkDerivation rec {
     runHook postInstall
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Looking glass for the BIRD Internet Routing Daemon";
     homepage = "https://github.com/sesa-me/bird-lg";
     license = licenses.gpl3Only;
